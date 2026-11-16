@@ -17,7 +17,7 @@ const ProductoLista = () => {
     };
 
     fetchProductos();
-  }, []);
+  }, [productos]);
 
  return (
     <div className="lista-container">

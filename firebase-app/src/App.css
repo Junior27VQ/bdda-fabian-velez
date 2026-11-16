@@ -31,8 +31,7 @@ body {
   display: grid;
   grid-template-columns: 380px 1fr;
   gap: 25px;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: start;
 }
 
 /* RESPONSIVE */
@@ -40,6 +39,6 @@ body {
 @media (max-width: 900px) {
   .app-content {
     grid-template-columns: 1fr;
-    align-items: center;
+    align-items: start;
   }
 }
