@@ -76,3 +76,48 @@
 
   font-size: .95rem;
 }
+
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-editar,
+.btn-eliminar {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+
+  font-size: 0.9rem;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+/* EDITAR */
+
+.btn-editar {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-editar:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+/* ELIMINAR */
+
+.btn-eliminar {
+  background: #dc2626;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+}

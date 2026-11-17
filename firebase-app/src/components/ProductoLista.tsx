@@ -1,4 +1,4 @@
-import { getProductos, type Producto } from "../services/productoService";
+import { getProductos, deleteProducto, type Producto } from "../services/productoService";
 import { useEffect, useState } from "react";
 import './ProductoLista.css';
 
@@ -22,6 +22,23 @@ const ProductoLista = ({ onEditar }: Props) => {
 
     fetchProductos();
   }, [productos]);
+
+  const handleEliminar = async (id: string) => {
+    const confirmar = window.confirm(
+        "¿Está seguro de eliminar este producto?"
+    );
+
+    if (!confirmar) return;
+
+    try {
+      await deleteProducto(id);
+      alert("Producto eliminado");
+      // Actualizar la lista de productos después de eliminar
+      setProductos(productos.filter((p) => p.id !== id));
+    } catch (error) {
+      console.error("Error al eliminar el producto: ", error);
+    }
+  };
 
  return (
     <div className="lista-container">
@@ -50,8 +67,9 @@ const ProductoLista = ({ onEditar }: Props) => {
                     <strong>{producto.stock}</strong>
                 </div>
 
-                <div>
-                    <button onClick={() => onEditar(producto)}>Editar</button>
+                <div className="acciones">
+                    <button className="btn-editar" onClick={() => onEditar(producto)}>Editar</button>
+                    <button className="btn-eliminar" onClick={() => handleEliminar(producto.id)}>Eliminar</button>
                 </div>
 
                 </article>
