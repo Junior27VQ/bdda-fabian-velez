@@ -1,9 +1,13 @@
 import ProductoForm from "./components/ProductoForm";
 import ProductoLista from "./components/ProductoLista";
+import { useState } from "react";
+import { type Producto } from "./services/productoService";
 
 import "./App.css";
 
 function App() {
+  const [productoEditar, setProductoEditar] = useState<Producto | null>(null);
+
   return (
     <div className="app-container">
 
@@ -13,8 +17,8 @@ function App() {
       </div>
 
       <div className="app-content">
-        <ProductoForm />
-        <ProductoLista />
+        <ProductoForm key={productoEditar?.id ?? "nuevo"} productoEditar={productoEditar} />
+        <ProductoLista onEditar={setProductoEditar} />
       </div>
 
     </div>

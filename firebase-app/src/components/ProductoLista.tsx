@@ -2,7 +2,11 @@ import { getProductos, type Producto } from "../services/productoService";
 import { useEffect, useState } from "react";
 import './ProductoLista.css';
 
-const ProductoLista = () => {
+interface Props {
+  onEditar: (producto: Producto) => void;
+}
+
+const ProductoLista = ({ onEditar }: Props) => {
   const [productos, setProductos] = useState<Producto[]>([]);
 
   useEffect(() => {
@@ -44,6 +48,10 @@ const ProductoLista = () => {
                 <div className="info">
                     <span>Stock</span>
                     <strong>{producto.stock}</strong>
+                </div>
+
+                <div>
+                    <button onClick={() => onEditar(producto)}>Editar</button>
                 </div>
 
                 </article>

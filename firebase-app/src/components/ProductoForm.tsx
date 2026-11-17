@@ -1,18 +1,27 @@
 import { useState, type SyntheticEvent } from 'react'
-import { addProducto } from '../services/productoService';
+import { addProducto, updateProducto, type Producto } from '../services/productoService';
 import './ProductoForm.css';
 
-function ProductoForm() {
-  const [nombre, setNombre] = useState("");
-  const [precio, setPrecio] = useState("");
-  const [stock, setStock] = useState("");
+interface Props {
+  productoEditar: Producto | null;
+}
+
+function ProductoForm({ productoEditar }: Props) {
+  const [nombre, setNombre] = useState(productoEditar?.nombre ?? "");
+  const [precio, setPrecio] = useState(productoEditar?.precio.toString() ?? "");
+  const [stock, setStock] = useState(productoEditar?.stock.toString() ?? "");
 
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
     e.preventDefault();
     try {
-      await addProducto(nombre, parseFloat(precio), parseInt(stock));
-      alert("Producto agregado: " + JSON.stringify({ nombre, precio, stock }));
-      // Al crear el producto, se limpian los campos del formulario
+      if (productoEditar) {
+        await updateProducto(productoEditar.id, nombre, parseFloat(precio), parseInt(stock));
+        alert("Producto actualizado: " + JSON.stringify({ nombre, precio, stock }));
+      } else {
+        await addProducto(nombre, parseFloat(precio), parseInt(stock));
+        alert("Producto agregado: " + JSON.stringify({ nombre, precio, stock }));
+      }
+      // Al crear o actualizar el producto, se limpian los campos del formulario
       setNombre("");
       setPrecio("");
       setStock("");
@@ -62,7 +71,7 @@ function ProductoForm() {
           </div>
 
           <button type="submit">
-            Guardar Producto
+            {productoEditar ? "Actualizar Producto" : "Guardar Producto"}
           </button>
         </form>
       </div>
