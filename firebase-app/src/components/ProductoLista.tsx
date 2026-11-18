@@ -1,4 +1,4 @@
-import { getProductos, deleteProducto, type Producto } from "../services/productoService";
+import { suscribirProductos, deleteProducto, type Producto } from "../services/productoService";
 import { useEffect, useState } from "react";
 import './ProductoLista.css';
 
@@ -10,31 +10,24 @@ const ProductoLista = ({ onEditar }: Props) => {
   const [productos, setProductos] = useState<Producto[]>([]);
 
   useEffect(() => {
-    const fetchProductos = async () => {
-        try {
-            const productosData = await getProductos();
-            setProductos(productosData);
-        }
-        catch (error) {
-            console.error("Error al obtener los productos: ", error);
-        }
-    };
+    const unsubscribe = suscribirProductos(
+      (productosData) => setProductos(productosData),
+      (error) => console.error("Error al escuchar los productos: ", error)
+    );
 
-    fetchProductos();
-  }, [productos]);
+    // Cleanup: se ejecuta al desmontar el componente
+    return () => unsubscribe();
+  }, []);
 
   const handleEliminar = async (id: string) => {
-    const confirmar = window.confirm(
-        "¿Está seguro de eliminar este producto?"
-    );
+    const confirmar = window.confirm("¿Está seguro de eliminar este producto?");
 
     if (!confirmar) return;
 
     try {
       await deleteProducto(id);
       alert("Producto eliminado");
-      // Actualizar la lista de productos después de eliminar
-      setProductos(productos.filter((p) => p.id !== id));
+      // Ya no hace falta setProductos: onSnapshot actualiza la lista solo
     } catch (error) {
       console.error("Error al eliminar el producto: ", error);
     }
