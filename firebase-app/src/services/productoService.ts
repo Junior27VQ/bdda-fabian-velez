@@ -7,7 +7,6 @@ export interface Producto {
   nombre: string;
   precio: number;
   stock: number;
-  tipo: "Sedan" | "SUV" | "Pickup" | "Hatchback";
 }
 // funcion de suscripcion a los productos en tiempo real
 export const suscribirProductos = (

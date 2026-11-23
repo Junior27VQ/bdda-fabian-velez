@@ -43,12 +43,12 @@ const vehiculos: Vehiculo[] = [
 ];
 
 // Funcion encargada de generar los vehiculos en la base de datos
-const generarVehiculos = async () => {
+export const generarVehiculos = async () => {
 
     // Crear un batch para realizar la escritura en lote
   const batch = writeBatch(db);
 
-  // Ciclo batch para recorer el arreglo de vehiculos y agregarlos a la base de datos
+  // Ciclo for para recorer el arreglo de vehiculos y agregarlos a la base de datos
   vehiculos.forEach((vehiculo) => {
     const docRef = doc(db, "vehiculos");
     batch.set(docRef, vehiculo);
@@ -61,6 +61,3 @@ const generarVehiculos = async () => {
     console.error("Error al generar vehículos:", error);
   }
 }
-
-// Llamada a la función para generar los vehículos
-generarVehiculos();
