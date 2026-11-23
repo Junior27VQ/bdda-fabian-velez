@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { doc, writeBatch } from "firebase/firestore";
+import { collection, doc, writeBatch } from "firebase/firestore";
 
 interface Vehiculo {
   marca: string;
@@ -13,7 +13,6 @@ interface Vehiculo {
 // Datos de Prueba
 const vehiculos: Vehiculo[] = [
   // Sedan
-  { marca: "Toyota", modelo: "Corolla", precio: 24500, stock: 8, anio: 2025, tipo: "Sedan" },
   { marca: "Honda", modelo: "Civic", precio: 27800, stock: 5, anio: 2024, tipo: "Sedan" },
   { marca: "Mazda", modelo: "Mazda 3", precio: 25900, stock: 3, anio: 2023, tipo: "Sedan" },
   { marca: "Hyundai", modelo: "Elantra", precio: 22400, stock: 0, anio: 2022, tipo: "Sedan" },
@@ -50,14 +49,11 @@ export const generarVehiculos = async () => {
 
   // Ciclo for para recorer el arreglo de vehiculos y agregarlos a la base de datos
   vehiculos.forEach((vehiculo) => {
-    const docRef = doc(db, "vehiculos");
+    const docRef = doc(collection(db, "vehiculos"));
     batch.set(docRef, vehiculo);
   });
 
-  try {
     await batch.commit();
-    console.log("Vehículos generados exitosamente.");
-  } catch (error) {
-    console.error("Error al generar vehículos:", error);
-  }
+    return vehiculos.length; // Retorna la cantidad de vehiculos generados
+  
 }

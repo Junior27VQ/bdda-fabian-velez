@@ -1,9 +1,10 @@
 //import ProductoForm from "./components/ProductoForm";
 //import ProductoLista from "./components/ProductoLista";
 //import { useState } from "react";
-import { getProductosDisponibles, /*type Producto */} from "./services/productoService";
+//import { getProductosDisponibles, /*type Producto */} from "./services/productoService";
 
 import "./App.css";
+import Vehiculos from "./components/Vehiculos";
 
 function App() {
   //const [productoEditar, setProductoEditar] = useState<Producto | null>(null);
@@ -20,10 +21,13 @@ function App() {
         <ProductoForm key={productoEditar?.id ?? "nuevo"} productoEditar={productoEditar} />
         <ProductoLista onEditar={setProductoEditar} />
       </div>*/}
-      <button onClick={async () => {
+      {/*<button onClick={async () => {
         const productosDisponibles = await getProductosDisponibles();
         console.log("Productos disponibles:", productosDisponibles);
-      }}>Consultar Productos Disponibles</button>
+      }}>Consultar Productos Disponibles</button>*/}
+      <div>
+        <Vehiculos />
+      </div>
 
     </div>
   );
