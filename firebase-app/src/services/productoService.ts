@@ -1,6 +1,10 @@
 import { db } from "../firebase";
 import { addDoc, collection, getDocs, updateDoc, doc, deleteDoc,
-  query, where, orderBy, onSnapshot, type Unsubscribe } from "firebase/firestore";
+  query, where, orderBy, 
+  limit, onSnapshot, type Unsubscribe, 
+  QueryDocumentSnapshot,
+  type DocumentData,
+  startAfter} from "firebase/firestore";
 
 export interface Producto {
   id: string;
@@ -8,6 +12,7 @@ export interface Producto {
   precio: number;
   stock: number;
 }
+
 // funcion de suscripcion a los productos en tiempo real
 export const suscribirProductos = (
   onData: (productos: Producto[]) => void,
@@ -79,6 +84,7 @@ export const getProductosDisponibles = async (): Promise<Producto[]> => {
     where("stock", ">", 0),
     where("precio", ">=", 100), 
     where("precio", "<=", 500),
+    limit(10),
     orderBy("precio", "asc"));
   const querySnapshot = await getDocs(consulta);
   return querySnapshot.docs.map((doc) => ({
@@ -86,3 +92,34 @@ export const getProductosDisponibles = async (): Promise<Producto[]> => {
     ...doc.data()
   })) as Producto[];
 }
+
+export const obtenerProductosPaginados = async (
+  ultimoDoc?: QueryDocumentSnapshot<DocumentData>
+) => {
+
+  const consulta = ultimoDoc
+    ? query(
+        collection(db, "productos"),
+        orderBy("precio", "asc"),
+        startAfter(ultimoDoc),
+        limit(5)
+      )
+    : query(
+        collection(db, "productos"),
+        orderBy("precio", "asc"),
+        limit(5)
+      );
+
+  const snapshot = await getDocs(consulta);
+
+  const productos = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Producto[];
+
+  return {
+    productos,
+    ultimoDoc: snapshot.docs[snapshot.docs.length - 1] ?? null,
+    cantidad: snapshot.docs.length,
+  };
+};

@@ -4,7 +4,8 @@
 //import { getProductosDisponibles, /*type Producto */} from "./services/productoService";
 
 import "./App.css";
-import Vehiculos from "./components/Vehiculos";
+import { ProductoListaPaginada } from "./components/ProductoListaPaginada";
+//import Vehiculos from "./components/Vehiculos";
 
 function App() {
   //const [productoEditar, setProductoEditar] = useState<Producto | null>(null);
@@ -25,10 +26,13 @@ function App() {
         const productosDisponibles = await getProductosDisponibles();
         console.log("Productos disponibles:", productosDisponibles);
       }}>Consultar Productos Disponibles</button>*/}
-      <div>
+      {/*<div>
         <Vehiculos />
+      </div>*/}
+      <div>
+        <h1>Productos</h1>
+        <ProductoListaPaginada />
       </div>
-
     </div>
   );
 }
