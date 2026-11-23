@@ -42,6 +42,7 @@ const Vehiculos = () => {
       // Si falta un indice, el mensaje trae el enlace de Firebase Console
       setVehiculos([]);
       setError(e instanceof Error ? e.message : "Error desconocido");
+      console.error("Error al ejecutar la consulta:", e);
     } finally {
       setCargando(false);
     }
