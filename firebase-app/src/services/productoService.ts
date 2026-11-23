@@ -1,5 +1,6 @@
 import { db } from "../firebase";
-import { addDoc, collection, getDocs, updateDoc, doc, deleteDoc, onSnapshot, type Unsubscribe } from "firebase/firestore";
+import { addDoc, collection, getDocs, updateDoc, doc, deleteDoc,
+  query, where, orderBy, onSnapshot, type Unsubscribe } from "firebase/firestore";
 
 export interface Producto {
   id: string;
@@ -69,4 +70,19 @@ export const updateProducto = async (id: string, nombre: string, precio: number,
 export const deleteProducto = async (id: string) => {
   const productoRef = doc(db, "productos", id);
   await deleteDoc(productoRef);
+}
+
+export const getProductosDisponibles = async (): Promise<Producto[]> => {
+  const consulta = query(
+    collection(db, "productos"),
+    where("categoria", "==", "tecnologia"),
+    where("stock", ">", 0),
+    where("precio", ">=", 100), 
+    where("precio", "<=", 500),
+    orderBy("precio", "asc"));
+  const querySnapshot = await getDocs(consulta);
+  return querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Producto[];
 }
