@@ -1,6 +1,6 @@
 import { db } from "../firebase";
-import { collection, getDocs, query, where, orderBy} from "firebase/firestore";
-import type { Query } from "firebase/firestore";
+import { collection, getDocs, query, where, orderBy, limit, startAfter} from "firebase/firestore";
+import type { DocumentData, Query, QueryDocumentSnapshot } from "firebase/firestore";
 
 export interface Vehiculo {
   id: string;
@@ -69,4 +69,56 @@ export const getSedanesRecientes = async (): Promise<Vehiculo[]> => {
     orderBy("anio", "desc")
   );
   return ejecutarConsulta(consulta);
+};
+
+// ==========================================================
+// PAGINACION
+// ==========================================================
+
+// Cantidad de vehiculos por pagina
+export const VEHICULOS_POR_PAGINA = 10;
+
+// Lo que devuelve cada pagina: los vehiculos, el cursor y si existe una pagina siguiente
+export interface PaginaVehiculos {
+  vehiculos: Vehiculo[];
+  ultimoDoc?: QueryDocumentSnapshot<DocumentData>;
+  hayMas: boolean;
+}
+
+// Si recibe ultimoDoc, trae los 10 que vienen DESPUES de ese documento (startAfter).
+// Si no lo recibe, trae los primeros 10.
+export const obtenerVehiculosPaginados = async (
+  ultimoDoc?: QueryDocumentSnapshot<DocumentData>
+): Promise<PaginaVehiculos> => {
+  const consulta = ultimoDoc
+    ? query(
+        vehiculosRef,
+        orderBy("precio", "asc"),
+        startAfter(ultimoDoc),
+        limit(VEHICULOS_POR_PAGINA)
+      )
+    : query(vehiculosRef, orderBy("precio", "asc"), limit(VEHICULOS_POR_PAGINA));
+
+  const snapshot = await getDocs(consulta);
+
+  const vehiculos = snapshot.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+  })) as Vehiculo[];
+
+  // El ultimo documento de esta pagina sera el cursor de la siguiente
+  const nuevoUltimoDoc = snapshot.docs[snapshot.docs.length - 1];
+
+  // Para saber si el boton "Siguiente" debe estar activo:
+  // si la pagina vino incompleta (menos de 10), ya no hay mas datos.
+  // Si vino completa, preguntamos por UN solo documento mas (limit(1)) para confirmarlo.
+  let hayMas = false;
+  if (snapshot.docs.length === VEHICULOS_POR_PAGINA && nuevoUltimoDoc) {
+    const siguiente = await getDocs(
+      query(vehiculosRef, orderBy("precio", "asc"), startAfter(nuevoUltimoDoc), limit(1))
+    );
+    hayMas = !siguiente.empty;
+  }
+
+  return { vehiculos, ultimoDoc: nuevoUltimoDoc, hayMas };
 };
