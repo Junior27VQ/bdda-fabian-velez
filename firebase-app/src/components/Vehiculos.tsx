@@ -8,6 +8,7 @@ import {
 } from "../scripts/consultasVehiculos";
 import { generarVehiculos } from "../scripts/generarVehiculos";
 import "./Vehiculos.css";
+import VehiculoListaPaginada from "./VehiculoListaPaginada";
 
 // Lista de consultas: cada una tiene su nombre, una descripcion corta y la funcion que la ejecuta.
 // Al recorrer este arreglo con map evitamos repetir cuatro botones casi iguales.
@@ -29,6 +30,7 @@ const Vehiculos = () => {
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [mostrarPaginados, setMostrarPaginados] = useState(false);
 
   // Ejecuta una consulta y controla los estados de carga, resultado y error
   const ejecutar = async (nombre: string, consulta: () => Promise<Vehiculo[]>) => {
@@ -86,6 +88,21 @@ const Vehiculos = () => {
           </button>
         ))}
       </div>
+
+      <div className="vehiculos__paginacion">
+        <button
+          className={`btn btn--consulta ${mostrarPaginados ? "btn--activa" : ""}`}
+          onClick={() => setMostrarPaginados(!mostrarPaginados)}
+        >
+          <strong>
+            {mostrarPaginados ? "Ocultar vehículos paginados" : "Cargar vehículos paginados"}
+          </strong>
+          <span>Lista de 10 en 10 con Anterior y Siguiente</span>
+        </button>
+      </div>
+
+      {/* Componente hijo: recibe el boolean como prop */}
+      <VehiculoListaPaginada mostrar={mostrarPaginados} />
 
       {mensaje && <p className="aviso aviso--ok">{mensaje}</p>}
       {cargando && <p className="aviso">Cargando vehículos...</p>}

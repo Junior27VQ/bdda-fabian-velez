@@ -1,0 +1,250 @@
+/* ---------- 1. Variables y panel contenedor ---------- */
+.paginados {
+  --panel: #121a23;
+  --tarjeta: #1a2530;
+  --borde: #2a3745;
+  --texto: #e8eef4;
+  --texto-suave: #93a4b5;
+  --acento: #6ea8fe;
+  --error: #ff6b6b;
+  --agotado: #ff6b6b;
+
+  /* Color por tipo de vehiculo (igual que en Vehiculos.css) */
+  --sedan: #6ea8fe;
+  --suv: #4fd1b5;
+  --pickup: #e0b84f;
+  --hatchback: #c39bff;
+
+  box-sizing: border-box;
+  margin: 0 0 1.5rem;
+  padding: 1.25rem;
+  background: var(--panel);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  text-align: left;
+}
+
+.paginados *,
+.paginados *::before,
+.paginados *::after {
+  box-sizing: inherit;
+}
+
+/* ---------- 2. Cabecera ---------- */
+.paginados .paginados__cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.paginados .paginados__titulo {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.paginados .paginados__rango {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 3. Lista de tarjetas ---------- */
+/* minmax(180px, 1fr): en pantalla ancha caben 5 columnas (10 tarjetas = 2 filas) */
+.paginados .paginados__lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.9rem;
+  transition: opacity 0.15s;
+}
+
+.paginados .paginados__lista--cargando {
+  opacity: 0.45;
+}
+
+.paginados .pag-tarjeta {
+  --color-tipo: var(--acento);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.9rem 0.9rem 0.9rem 1rem;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-top: 4px solid var(--color-tipo);
+  border-radius: 12px;
+}
+
+.paginados .pag-tarjeta[data-tipo="Sedan"] { --color-tipo: var(--sedan); }
+.paginados .pag-tarjeta[data-tipo="SUV"] { --color-tipo: var(--suv); }
+.paginados .pag-tarjeta[data-tipo="Pickup"] { --color-tipo: var(--pickup); }
+.paginados .pag-tarjeta[data-tipo="Hatchback"] { --color-tipo: var(--hatchback); }
+
+.paginados .pag-tarjeta__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.paginados .pag-tarjeta__tipo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-tipo);
+}
+
+/* Posicion del vehiculo en el orden total: sirve para comprobar que la pagina 2 empieza en el 11 */
+.paginados .pag-tarjeta__numero {
+  font-size: 0.78rem;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.paginados .pag-tarjeta__nombre {
+  margin: 0.15rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--texto);
+}
+
+.paginados .pag-tarjeta__nombre span {
+  display: block;
+  font-weight: 400;
+  color: var(--texto-suave);
+}
+
+.paginados .pag-tarjeta__precio {
+  margin: 0.35rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--texto);
+  font-variant-numeric: tabular-nums;
+}
+
+.paginados .pag-tarjeta__detalle {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+.paginados .pag-tarjeta__agotado {
+  color: var(--agotado);
+  font-weight: 600;
+}
+
+/* ---------- 4. Mensajes ---------- */
+.paginados .paginados__error {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--error);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  color: var(--texto);
+}
+
+.paginados .paginados__vacio {
+  margin: 0;
+  padding: 1rem 0;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+}
+
+/* ---------- 5. Navegacion Anterior / Siguiente ---------- */
+.paginados .paginados__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.paginados .paginados__pagina {
+  min-width: 6.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--texto);
+  font-variant-numeric: tabular-nums;
+}
+
+.paginados .paginados__btn {
+  min-width: 7rem;
+  padding: 0.6rem 1.2rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--texto);
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.paginados .paginados__btn:hover:not(:disabled) {
+  border-color: var(--acento);
+  background: #223140;
+}
+
+.paginados .paginados__btn:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* Boton deshabilitado: primera pagina (Anterior) o ultima pagina (Siguiente) */
+.paginados .paginados__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ---------- 6. Responsive ---------- */
+/* Tablet: tarjetas un poco mas anchas, por lo que caben menos columnas */
+@media (max-width: 820px) {
+  .paginados .paginados__lista {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+/* Celular: 1 columna, y los botones ocupan el ancho disponible */
+@media (max-width: 520px) {
+  .paginados {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .paginados .paginados__lista {
+    grid-template-columns: 1fr;
+  }
+
+  .paginados .paginados__nav {
+    gap: 0.5rem;
+  }
+
+  .paginados .paginados__btn {
+    flex: 1;
+    min-width: 0;
+    padding: 0.7rem 0.5rem;
+  }
+
+  .paginados .paginados__pagina {
+    min-width: 4.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paginados .paginados__lista,
+  .paginados .paginados__btn {
+    transition: none;
+  }
+}
