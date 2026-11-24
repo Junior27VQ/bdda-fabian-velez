@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, doc, writeBatch } from "firebase/firestore";
+import { collection, doc, getCountFromServer, writeBatch } from "firebase/firestore";
 
 interface Vehiculo {
   marca: string;
@@ -57,3 +57,64 @@ export const generarVehiculos = async () => {
     return vehiculos.length; // Retorna la cantidad de vehiculos generados
   
 }
+
+// 24 vehiculos adicionales 
+const vehiculosExtra: Vehiculo[] = [
+  { marca: "Toyota", modelo: "Yaris", precio: 17900, stock: 13, anio: 2023, tipo: "Hatchback" },
+  { marca: "Honda", modelo: "HR-V", precio: 32800, stock: 6, anio: 2025, tipo: "SUV" },
+  { marca: "Chevrolet", modelo: "Onix", precio: 17500, stock: 9, anio: 2024, tipo: "Sedan" },
+  { marca: "Nissan", modelo: "Versa", precio: 20500, stock: 0, anio: 2021, tipo: "Sedan" },
+  { marca: "Ford", modelo: "F-150", precio: 55900, stock: 4, anio: 2026, tipo: "Pickup" },
+  { marca: "Hyundai", modelo: "Accent", precio: 16900, stock: 17, anio: 2022, tipo: "Sedan" },
+  { marca: "Kia", modelo: "Seltos", precio: 28500, stock: 8, anio: 2024, tipo: "SUV" },
+  { marca: "Mazda", modelo: "CX-30", precio: 30900, stock: 2, anio: 2023, tipo: "SUV" },
+  { marca: "Volkswagen", modelo: "Tiguan", precio: 41500, stock: 5, anio: 2025, tipo: "SUV" },
+  { marca: "Chevrolet", modelo: "Silverado", precio: 52400, stock: 3, anio: 2024, tipo: "Pickup" },
+  { marca: "Toyota", modelo: "Tacoma", precio: 47500, stock: 7, anio: 2022, tipo: "Pickup" },
+  { marca: "Honda", modelo: "Fit", precio: 19200, stock: 0, anio: 2020, tipo: "Hatchback" },
+  { marca: "Peugeot", modelo: "208", precio: 20800, stock: 11, anio: 2025, tipo: "Hatchback" },
+  { marca: "Renault", modelo: "Duster", precio: 26500, stock: 14, anio: 2023, tipo: "SUV" },
+  { marca: "Suzuki", modelo: "Vitara", precio: 27200, stock: 6, anio: 2021, tipo: "SUV" },
+  { marca: "BMW", modelo: "Serie 3", precio: 49900, stock: 1, anio: 2026, tipo: "Sedan" },
+  { marca: "Mitsubishi", modelo: "Outlander", precio: 35200, stock: 4, anio: 2024, tipo: "SUV" },
+  { marca: "Kia", modelo: "Sorento", precio: 43800, stock: 5, anio: 2025, tipo: "SUV" },
+  { marca: "Hyundai", modelo: "Santa Fe", precio: 45900, stock: 3, anio: 2026, tipo: "SUV" },
+  { marca: "Nissan", modelo: "X-Trail", precio: 37900, stock: 9, anio: 2022, tipo: "SUV" },
+  { marca: "Mazda", modelo: "Mazda 6", precio: 33900, stock: 2, anio: 2021, tipo: "Sedan" },
+  { marca: "Honda", modelo: "Accord", precio: 36100, stock: 6, anio: 2024, tipo: "Sedan" },
+  { marca: "Fiat", modelo: "Argo", precio: 15500, stock: 16, anio: 2023, tipo: "Hatchback" },
+  { marca: "Chevrolet", modelo: "Colorado", precio: 40800, stock: 0, anio: 2025, tipo: "Pickup" },
+];
+
+// Agrega solo los vehiculos que faltan para llegar al minimo (por defecto 40).
+// Es seguro ejecutarla mas de una vez: si ya hay 40 o mas, no agrega nada.
+export const completarVehiculos = async (
+  minimo = 40
+): Promise<{ agregados: number; total: number }> => {
+  const vehiculosRef = collection(db, "vehiculos");
+
+  // getCountFromServer cuenta los documentos en el servidor SIN descargarlos
+  const conteo = await getCountFromServer(vehiculosRef);
+  const actuales = conteo.data().count;
+
+  const faltan = minimo - actuales;
+  if (faltan <= 0) {
+    return { agregados: 0, total: actuales };
+  }
+
+  const batch = writeBatch(db);
+  vehiculosExtra.slice(0, faltan).forEach((vehiculo) => {
+    batch.set(doc(vehiculosRef), vehiculo);
+  });
+  await batch.commit();
+
+  const agregados = Math.min(faltan, vehiculosExtra.length);
+  return { agregados, total: actuales + agregados };
+};
+
+// Cuenta cuantos vehiculos hay en Firestore sin descargarlos.
+// Se usa para deshabilitar el boton "Generar datos de prueba" cuando ya hay datos.
+export const contarVehiculos = async (): Promise<number> => {
+  const conteo = await getCountFromServer(collection(db, "vehiculos"));
+  return conteo.data().count;
+};

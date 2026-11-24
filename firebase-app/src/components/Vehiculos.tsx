@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getVehiculosDisponibles,
   getSUVDisponibles,
@@ -6,9 +6,13 @@ import {
   getSedanesRecientes,
   type Vehiculo,
 } from "../scripts/consultasVehiculos";
-import { generarVehiculos } from "../scripts/generarVehiculos";
-import "./Vehiculos.css";
+import {
+  generarVehiculos,
+  completarVehiculos,
+  contarVehiculos,
+} from "../scripts/generarVehiculos";
 import VehiculoListaPaginada from "./VehiculoListaPaginada";
+import "./Vehiculos.css";
 
 // Lista de consultas: cada una tiene su nombre, una descripcion corta y la funcion que la ejecuta.
 // Al recorrer este arreglo con map evitamos repetir cuatro botones casi iguales.
@@ -18,6 +22,9 @@ const consultas = [
   { nombre: "Consulta 3", detalle: "Precio entre 20.000 y 40.000", ejecutar: getVehiculosPorRangoPrecio },
   { nombre: "Consulta 4", detalle: "Sedan desde 2023 (reto)", ejecutar: getSedanesRecientes },
 ];
+
+// Cantidad minima de vehiculos
+const MINIMO_VEHICULOS = 40;
 
 // Por debajo de este numero de unidades mostramos el stock como "bajo"
 const STOCK_BAJO = 3;
@@ -30,7 +37,26 @@ const Vehiculos = () => {
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
+  // true = se muestra la lista paginada (se le pasa como prop al componente hijo)
   const [mostrarPaginados, setMostrarPaginados] = useState(false);
+  // Cantidad de vehiculos que hay en Firestore (null = todavia no se sabe)
+  const [totalVehiculos, setTotalVehiculos] = useState<number | null>(null);
+  // true mientras se esta guardando: evita un segundo clic
+  const [generando, setGenerando] = useState(false);
+  const [completando, setCompletando] = useState(false);
+
+  // Valores derivados del total: deciden que botones se deshabilitan
+  const datosGenerados = totalVehiculos !== null && totalVehiculos > 0;
+  const coleccionCompleta = totalVehiculos !== null && totalVehiculos >= MINIMO_VEHICULOS;
+
+  // Al abrir la pagina se consulta cuantos vehiculos hay (conteo en el servidor, sin descargarlos)
+  useEffect(() => {
+    contarVehiculos()
+      .then((total) => setTotalVehiculos(total))
+      .catch(() => {
+        // si falla el conteo, el boton queda habilitado
+      });
+  }, []);
 
   // Ejecuta una consulta y controla los estados de carga, resultado y error
   const ejecutar = async (nombre: string, consulta: () => Promise<Vehiculo[]>) => {
@@ -38,13 +64,13 @@ const Vehiculos = () => {
     setError("");
     setMensaje("");
     setActiva(nombre);
+    setMostrarPaginados(false); // la lista paginada se oculta
     try {
       setVehiculos(await consulta());
     } catch (e) {
       // Si falta un indice, el mensaje trae el enlace de Firebase Console
       setVehiculos([]);
       setError(e instanceof Error ? e.message : "Error desconocido");
-      console.error("Error al ejecutar la consulta:", e);
     } finally {
       setCargando(false);
     }
@@ -52,11 +78,44 @@ const Vehiculos = () => {
 
   const handleGenerar = async () => {
     setError("");
+    setGenerando(true);
     try {
       const total = await generarVehiculos();
       setMensaje(`Se guardaron ${total} vehículos en Firestore.`);
+      setTotalVehiculos(await contarVehiculos()); // actualiza el total real de Firestore
     } catch (e) {
       setError(e instanceof Error ? e.message : "No se pudieron guardar los vehículos");
+    } finally {
+      setGenerando(false);
+    }
+  };
+
+  // Al mostrar la lista paginada se limpian los resultados de las consultas
+  const togglePaginados = () => {
+    if (!mostrarPaginados) {
+      setActiva(null);
+      setVehiculos([]);
+      setError("");
+    }
+    setMostrarPaginados(!mostrarPaginados);
+  };
+
+  // Agrega los vehiculos que faltan para llegar a 40
+  const handleCompletar = async () => {
+    setError("");
+    setCompletando(true);
+    try {
+      const { agregados, total } = await completarVehiculos(MINIMO_VEHICULOS);
+      setTotalVehiculos(total); // si total >= 40 el boton queda deshabilitado
+      setMensaje(
+        agregados === 0
+          ? `Ya hay ${total} vehículos, no se agregó ninguno.`
+          : `Se agregaron ${agregados} vehículos. Total en la colección: ${total}.`
+      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "No se pudieron completar los vehículos");
+    } finally {
+      setCompletando(false);
     }
   };
 
@@ -71,9 +130,28 @@ const Vehiculos = () => {
     <section className="vehiculos">
       <header className="vehiculos__cabecera">
         <h2 className="vehiculos__titulo">Vehículos</h2>
-        <button className="btn btn--secundario" onClick={handleGenerar}>
-          Generar datos de prueba
-        </button>
+        <div className="vehiculos__acciones">
+          <button
+            className="btn btn--secundario"
+            onClick={handleGenerar}
+            disabled={datosGenerados || generando}
+            title={datosGenerados ? "La colección ya tiene datos de prueba" : undefined}
+          >
+            Generar datos de prueba
+          </button>
+          <button
+            className="btn btn--secundario"
+            onClick={handleCompletar}
+            disabled={coleccionCompleta || completando}
+            title={
+              coleccionCompleta
+                ? `La colección ya tiene ${totalVehiculos} vehículos`
+                : undefined
+            }
+          >
+            Completar a {MINIMO_VEHICULOS} vehículos
+          </button>
+        </div>
       </header>
 
       <div className="vehiculos__consultas">
@@ -92,7 +170,7 @@ const Vehiculos = () => {
       <div className="vehiculos__paginacion">
         <button
           className={`btn btn--consulta ${mostrarPaginados ? "btn--activa" : ""}`}
-          onClick={() => setMostrarPaginados(!mostrarPaginados)}
+          onClick={togglePaginados}
         >
           <strong>
             {mostrarPaginados ? "Ocultar vehículos paginados" : "Cargar vehículos paginados"}

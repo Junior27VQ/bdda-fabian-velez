@@ -1,9 +1,3 @@
-/* ==========================================================
-   Vehiculos.css
-   Todo esta dentro de .vehiculos para no afectar a otros
-   componentes de la app (productos, etc.).
-   ========================================================== */
-
 /* ---------- 1. Variables de color (paleta oscura) ---------- */
 .vehiculos {
   --fondo: #0e141b;
@@ -73,9 +67,15 @@
   transition: border-color 0.15s, background-color 0.15s;
 }
 
-.vehiculos .btn:hover {
+.vehiculos .btn:hover:not(:disabled) {
   border-color: var(--acento);
   background: var(--superficie-alta);
+}
+
+/* Boton deshabilitado: se ve apagado y no reacciona */
+.vehiculos .btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .vehiculos .btn:focus-visible,
@@ -292,5 +292,31 @@
 @media (prefers-reduced-motion: reduce) {
   .vehiculos .btn {
     transition: none;
+  }
+}
+
+/* ---------- 9. Taller 8: acciones de cabecera y boton de paginacion ---------- */
+.vehiculos .vehiculos__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.vehiculos .vehiculos__paginacion {
+  margin-bottom: 1.25rem;
+}
+
+.vehiculos .vehiculos__paginacion .btn--consulta {
+  width: 100%;
+  max-width: 340px;
+}
+
+@media (max-width: 520px) {
+  .vehiculos .vehiculos__acciones {
+    flex-direction: column;
+  }
+
+  .vehiculos .vehiculos__paginacion .btn--consulta {
+    max-width: none;
   }
 }
