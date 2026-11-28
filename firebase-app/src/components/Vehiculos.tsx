@@ -5,6 +5,7 @@ import {
   getVehiculosPorRangoPrecio,
   getSedanesRecientes,
   type Vehiculo,
+  getDeportivoDisponible,
 } from "../scripts/consultasVehiculos";
 import {
   generarVehiculos,
@@ -21,6 +22,7 @@ const consultas = [
   { nombre: "Consulta 2", detalle: "SUV disponibles", ejecutar: getSUVDisponibles },
   { nombre: "Consulta 3", detalle: "Precio entre 20.000 y 40.000", ejecutar: getVehiculosPorRangoPrecio },
   { nombre: "Consulta 4", detalle: "Sedan desde 2023 (reto)", ejecutar: getSedanesRecientes },
+  { nombre: "Consulta 5", detalle: "Deportivos disponibles", ejecutar: getDeportivoDisponible },
 ];
 
 // Cantidad minima de vehiculos
@@ -133,8 +135,9 @@ const Vehiculos = () => {
         <div className="vehiculos__acciones">
           <button
             className="btn btn--secundario"
-            onClick={handleGenerar}
             disabled={datosGenerados || generando}
+            onClick={handleGenerar}
+            
             title={datosGenerados ? "La colección ya tiene datos de prueba" : undefined}
           >
             Generar datos de prueba

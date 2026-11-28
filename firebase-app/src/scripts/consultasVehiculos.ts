@@ -71,6 +71,16 @@ export const getSedanesRecientes = async (): Promise<Vehiculo[]> => {
   return ejecutarConsulta(consulta);
 };
 
+export const getDeportivoDisponible = async (): Promise<Vehiculo[]> => {
+  const consulta = query(
+    vehiculosRef,
+    where("tipo", "==", "Deportivo"),
+    where("stock", ">", 0),
+    orderBy("precio", "asc")
+  );
+  return ejecutarConsulta(consulta);
+};
+
 // ==========================================================
 // PAGINACION
 // ==========================================================

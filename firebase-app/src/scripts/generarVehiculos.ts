@@ -7,7 +7,7 @@ interface Vehiculo {
   precio: number;
   stock: number;
   anio: number;
-  tipo: "Sedan" | "SUV" | "Pickup" | "Hatchback";
+  tipo: "Sedan" | "SUV" | "Pickup" | "Hatchback" | "Deportivo";
 }
 
 // Datos de Prueba
@@ -39,6 +39,12 @@ const vehiculos: Vehiculo[] = [
   { marca: "Volkswagen", modelo: "Golf", precio: 29900, stock: 3, anio: 2025, tipo: "Hatchback" },
   { marca: "Mazda", modelo: "Mazda 2", precio: 18500, stock: 7, anio: 2022, tipo: "Hatchback" },
   { marca: "Hyundai", modelo: "i20", precio: 17200, stock: 1, anio: 2026, tipo: "Hatchback" },
+  //Deportibos
+  {marca: "Porsche", modelo: "911", precio: 120000, stock: 2, anio: 2025, tipo: "Deportivo"},
+  {marca: "Chevrolet", modelo: "Corvette", precio: 65000, stock: 3, anio: 2024, tipo: "Deportivo"},
+  {marca: "Ford", modelo: "Mustang", precio: 55000, stock: 5, anio: 2023, tipo: "Deportivo"},
+  {marca: "Nissan", modelo: "GT-R", precio: 115000, stock: 1, anio: 2026, tipo: "Deportivo"},
+  {marca: "BMW", modelo: "M4", precio: 72000, stock: 4, anio: 2022, tipo: "Deportivo"},
 ];
 
 // Funcion encargada de generar los vehiculos en la base de datos

@@ -16,6 +16,7 @@ const ProductoLista = ({ onEditar }: Props) => {
     );
 
     // Cleanup: se ejecuta al desmontar el componente
+    // Evita fugas de memoria y detiene la suscripción a los productos
     return () => unsubscribe();
   }, []);
 

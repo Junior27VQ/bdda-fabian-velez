@@ -77,6 +77,7 @@ export const deleteProducto = async (id: string) => {
   await deleteDoc(productoRef);
 }
 
+// funcion para obtener productos disponibles con ciertas condiciones
 export const getProductosDisponibles = async (): Promise<Producto[]> => {
   const consulta = query(
     collection(db, "productos"),
