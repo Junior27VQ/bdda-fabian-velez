@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, getDocs, limit, orderBy, query, startAfter } from "firebase/firestore";
+import { collection, doc, getDoc,  getDocs, limit, orderBy, query, startAfter, where } from "firebase/firestore";
 import type { DocumentData, QueryConstraint, QueryDocumentSnapshot } from "firebase/firestore";
 
 // Nombre de la colección principal 
@@ -93,4 +93,51 @@ export const obtenerPagina = async (
   }
 
   return { vehiculos, ultimoDoc, hayMas };
+};
+
+// ---------- Patrones de acceso ----------
+// Unión discriminada: cada patrón lleva su nombre ("patron") y SOLO los datos que necesita.
+// TypeScript nos obliga a manejar todos los casos y evita combinaciones inválidas
+// (por ejemplo, un filtro de marca sin marca).
+export type FiltroInventario =
+  | { patron: "todos" } // PA1
+  | { patron: "marca"; marca: string } // PA2
+  | { patron: "disponibles" } // PA3
+  | { patron: "rangoPrecio"; min: number; max: number } // PA4
+  | { patron: "tipo"; tipo: TipoVehiculo } // PA5
+  | { patron: "combustible"; combustible: Combustible }; // PA6
+
+// Traduce un patrón de acceso a los where() de Firestore.
+// El filtrado ocurre en el SERVIDOR: nunca se descarga la colección para filtrar con JS.
+export const restriccionesDeFiltro = (filtro: FiltroInventario): QueryConstraint[] => {
+  switch (filtro.patron) {
+    case "todos":
+      return [];
+    case "marca":
+      return [where("marca", "==", filtro.marca)];
+    case "disponibles":
+      return [where("disponible", "==", true)];
+    case "rangoPrecio":
+      // Rango sobre el mismo campo por el que se ordena (precio): no necesita índice compuesto
+      return [where("precio", ">=", filtro.min), where("precio", "<=", filtro.max)];
+    case "tipo":
+      return [where("tipo", "==", filtro.tipo)];
+    case "combustible":
+      // Campo dentro del objeto anidado: se accede con notación de punto
+      return [where("especificaciones.combustible", "==", filtro.combustible)];
+  }
+};
+
+// Función que usarán los componentes: una página del inventario según el patrón elegido
+export const consultarInventario = (
+  filtro: FiltroInventario,
+  cursor?: Cursor
+): Promise<PaginaInventario> => obtenerPagina(restriccionesDeFiltro(filtro), cursor);
+
+// ---------- Detalle de un vehículo por su ID ----------
+// getDoc lee UN documento puntual (una sola lectura). Devuelve null si no existe.
+export const obtenerVehiculoPorId = async (id: string): Promise<VehiculoInventario | null> => {
+  const snapshot = await getDoc(doc(db, COLECCION, id));
+  if (!snapshot.exists()) return null;
+  return { id: snapshot.id, ...snapshot.data() } as VehiculoInventario;
 };
