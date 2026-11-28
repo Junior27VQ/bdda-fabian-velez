@@ -22,7 +22,7 @@ const InventarioVehiculos = ({vehiculos, numeroInicial, cargando, onBuscar, onVe
       <header className="inv-encabezado">
         <div className="inv-encabezado__contenido">
           <p className="inv-encabezado__etiqueta">
-            Taller 9 · Cloud Firestore
+            FAVQ · Cloud Firestore
           </p>
 
           <h1 className="inv-encabezado__titulo">
@@ -108,17 +108,11 @@ const InventarioVehiculos = ({vehiculos, numeroInicial, cargando, onBuscar, onVe
                   </h3>
 
                   <p className="inv-tarjeta__anio">
-                    {anio} ·{" "}
-                    {
-                      especificaciones.combustible
-                    }
+                    {anio} ·{" "} {especificaciones.combustible}
                   </p>
 
                   <p className="inv-tarjeta__precio">
-                    $
-                    {precio.toLocaleString(
-                      "en-US"
-                    )}
+                    $ {precio.toLocaleString("en-US")}
                   </p>
 
                   <div className="inv-tarjeta__fila">
@@ -137,11 +131,7 @@ const InventarioVehiculos = ({vehiculos, numeroInicial, cargando, onBuscar, onVe
                     {onVerDetalle && (
                       <button
                         className="inv-tarjeta__detalle"
-                        onClick={() =>
-                          onVerDetalle(
-                            id
-                          )
-                        }
+                        onClick={() => onVerDetalle(id)}
                       >
                         Ver detalle
                       </button>
