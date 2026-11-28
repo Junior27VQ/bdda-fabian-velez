@@ -1,0 +1,70 @@
+/* Barra Anterior / Siguiente */
+.inv-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.inv-nav__pagina {
+  min-width: 6.5rem;
+  text-align: center;
+  font-weight: 700;
+  color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+}
+
+.inv-nav__boton {
+  min-width: 7.5rem;
+  padding: 0.65rem 1.25rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--tinta);
+  cursor: pointer;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.inv-nav__boton:hover:not(:disabled) {
+  border-color: var(--acento);
+  background: var(--superficie-suave);
+}
+
+.inv-nav__boton:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* Deshabilitado: primera página (Anterior) o última (Siguiente) */
+.inv-nav__boton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 540px) {
+  .inv-nav {
+    gap: 0.5rem;
+  }
+
+  .inv-nav__boton {
+    flex: 1;
+    min-width: 0;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .inv-nav__pagina {
+    min-width: 4.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inv-nav__boton {
+    transition: none;
+  }
+}

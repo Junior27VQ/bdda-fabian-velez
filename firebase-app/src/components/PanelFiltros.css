@@ -1,5 +1,4 @@
-/* PANEL DE FILTROS */
-
+/* Panel de controles: tarjeta blanca con los patrones de consulta */
 .inv-filtros {
   display: flex;
   flex-direction: column;
@@ -18,8 +17,6 @@
   color: var(--tinta);
 }
 
-/* Chips de selección */
-
 .inv-filtros__patrones {
   display: flex;
   flex-wrap: wrap;
@@ -36,10 +33,7 @@
   background: var(--superficie-suave);
   border: 1px solid var(--borde);
   border-radius: 999px;
-  transition:
-    background-color 0.15s,
-    border-color 0.15s,
-    color 0.15s;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .inv-filtros__chip:hover {
@@ -59,8 +53,7 @@
   outline-offset: 2px;
 }
 
-/* Campos */
-
+/* Fila de campos + botón Buscar */
 .inv-filtros__fila {
   display: flex;
   flex-wrap: wrap;
@@ -100,8 +93,6 @@
   outline-offset: 1px;
   border-color: var(--acento);
 }
-
-/* Botón Buscar */
 
 .inv-filtros__buscar {
   padding: 0.65rem 1.6rem;
@@ -146,94 +137,24 @@
   border-radius: 6px;
 }
 
-/* NAVEGACIÓN DE PÁGINAS */
-
-.inv-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding-top: 0.5rem;
-}
-
-.inv-nav__pagina {
-  min-width: 6.5rem;
-  text-align: center;
-  font-weight: 700;
-  color: var(--tinta);
-  font-variant-numeric: tabular-nums;
-}
-
-.inv-nav__boton {
-  min-width: 7.5rem;
-  padding: 0.65rem 1.25rem;
-  font: inherit;
-  font-weight: 600;
-  color: var(--tinta);
-  cursor: pointer;
-  background: var(--superficie);
-  border: 1px solid var(--borde);
-  border-radius: 10px;
-  box-shadow: var(--sombra);
-  transition:
-    border-color 0.15s,
-    background-color 0.15s;
-}
-
-.inv-nav__boton:hover:not(:disabled) {
-  border-color: var(--acento);
-  background: var(--superficie-suave);
-}
-
-.inv-nav__boton:focus-visible {
-  outline: 2px solid var(--acento);
-  outline-offset: 2px;
-}
-
-.inv-nav__boton:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* RESPONSIVE */
-
 @media (max-width: 540px) {
   .inv-filtros {
     padding: 1rem;
   }
 
   .inv-filtros__campo {
-    flex-basis: 100%;
     max-width: none;
+    flex-basis: 100%;
   }
 
   .inv-filtros__buscar {
     width: 100%;
   }
-
-  .inv-nav {
-    gap: 0.5rem;
-  }
-
-  .inv-nav__boton {
-    flex: 1;
-    min-width: 0;
-    padding: 0.75rem 0.5rem;
-  }
-
-  .inv-nav__pagina {
-    min-width: 4.5rem;
-    font-size: 0.9rem;
-  }
 }
-
-/* ACCESIBILIDAD */
 
 @media (prefers-reduced-motion: reduce) {
   .inv-filtros__chip,
-  .inv-filtros__buscar,
-  .inv-nav__boton {
+  .inv-filtros__buscar {
     transition: none;
   }
 }
