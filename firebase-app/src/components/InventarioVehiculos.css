@@ -1,0 +1,229 @@
+/* ENCABEZADO */
+
+.inv-encabezado {
+  padding: 2.25rem 1.25rem 2.75rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0f1b2d 0%, #17304f 100%);
+}
+
+.inv-encabezado__contenido {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.inv-encabezado__etiqueta {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8cc2ff;
+}
+
+.inv-encabezado__titulo {
+  margin: 0;
+  font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.inv-encabezado__subtitulo {
+  max-width: 46rem;
+  margin: 0.75rem 0 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #b8c7da;
+}
+
+/* LISTA DE VEHÍCULOS */
+
+.inv-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  transition: opacity 0.15s;
+}
+
+.inv-lista--cargando {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.inv-lista__vacio {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--tinta-suave);
+  background: var(--superficie);
+  border: 2px dashed var(--borde);
+  border-radius: var(--radio);
+}
+
+.inv-lista__vacio p {
+  margin: 0;
+}
+
+/* TARJETA DE VEHÍCULO  */
+
+.inv-tarjeta {
+  --color-tipo: var(--acento);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.1rem 1.15rem;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-top: 4px solid var(--color-tipo);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.inv-tarjeta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(15, 27, 45, 0.08),
+    0 12px 28px rgba(15, 27, 45, 0.1);
+}
+
+/* Colores por tipo */
+
+.inv-tarjeta[data-tipo="Sedan"] {
+  --color-tipo: var(--sedan);
+}
+
+.inv-tarjeta[data-tipo="SUV"] {
+  --color-tipo: var(--suv);
+}
+
+.inv-tarjeta[data-tipo="Pickup"] {
+  --color-tipo: var(--pickup);
+}
+
+.inv-tarjeta[data-tipo="Hatchback"] {
+  --color-tipo: var(--hatchback);
+}
+
+.inv-tarjeta__fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.inv-tarjeta__tipo {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-tipo);
+}
+
+.inv-tarjeta__numero {
+  font-size: 0.8rem;
+  color: var(--tinta-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.inv-tarjeta__nombre {
+  margin: 0.25rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--tinta);
+}
+
+.inv-tarjeta__nombre span {
+  display: block;
+  font-weight: 400;
+  color: var(--tinta-suave);
+}
+
+.inv-tarjeta__anio {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--tinta-suave);
+}
+
+.inv-tarjeta__precio {
+  margin: 0.35rem 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+}
+
+.inv-tarjeta__estado {
+  padding: 0.2rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.inv-tarjeta__estado--si {
+  color: var(--ok);
+  background: var(--ok-fondo);
+}
+
+.inv-tarjeta__estado--no {
+  color: var(--no);
+  background: var(--no-fondo);
+}
+
+.inv-tarjeta__detalle {
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--acento);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.inv-tarjeta__detalle:hover {
+  background: var(--superficie-suave);
+  border-color: var(--acento);
+}
+
+.inv-tarjeta__detalle:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 540px) {
+  .inv-lista {
+    grid-template-columns: 1fr;
+  }
+
+  .inv-encabezado {
+    padding: 2rem 1rem;
+  }
+
+  .inv-encabezado__subtitulo {
+    font-size: 0.95rem;
+  }
+
+  .inv-tarjeta__precio {
+    font-size: 1.4rem;
+  }
+}
+
+/* ACCESIBILIDAD */
+
+@media (prefers-reduced-motion: reduce) {
+  .inv-lista,
+  .inv-tarjeta,
+  .inv-tarjeta__detalle {
+    transition: none;
+  }
+
+  .inv-tarjeta:hover {
+    transform: none;
+  }
+}

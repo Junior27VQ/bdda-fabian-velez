@@ -1,0 +1,130 @@
+/* CONFIGURACIÓN GLOBAL DEL INVENTARIO */
+
+.inventario {
+  --fondo: #f3f5f9;
+  --superficie: #ffffff;
+  --superficie-suave: #f8fafc;
+  --borde: #e1e7ef;
+  --tinta: #0f1b2d;
+  --tinta-suave: #5b6b7e;
+
+  --acento: #0b6bcb;
+  --acento-oscuro: #08529e;
+
+  --ok: #12805c;
+  --ok-fondo: #e3f5ee;
+
+  --no: #b42318;
+  --no-fondo: #fdecea;
+
+  /* Colores por tipo de vehículo */
+  --sedan: #2563eb;
+  --suv: #0f766e;
+  --pickup: #b45309;
+  --hatchback: #7c3aed;
+
+  --radio: 14px;
+
+  --sombra:
+    0 1px 2px rgba(15, 27, 45, 0.06),
+    0 6px 20px rgba(15, 27, 45, 0.06);
+
+  width: 100%;
+  min-height: 100vh;
+
+  background: var(--fondo);
+  color: var(--tinta);
+
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    Roboto,
+    sans-serif;
+
+  line-height: 1.5;
+  text-align: left;
+
+  box-sizing: border-box;
+}
+
+.inventario *,
+.inventario *::before,
+.inventario *::after {
+  box-sizing: inherit;
+}
+
+
+/* CONTENEDOR PRINCIPAL */
+
+.inventario__contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  width: 100%;
+
+  padding-bottom: 3rem;
+}
+
+
+/* RESUMEN DE RESULTADOS */
+
+.inventario__resumen {
+  margin: 0;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  color: var(--tinta-suave);
+}
+
+
+/*  MENSAJES DE ERROR */
+
+.inventario__error {
+  max-width: 1180px;
+
+  width: 100%;
+
+  margin: 1.5rem auto 0;
+  padding: 1rem 1.25rem;
+
+  background: var(--no-fondo);
+
+  border: 1px solid var(--no);
+  border-radius: var(--radio);
+}
+
+.inventario__error p {
+  margin: 0 0 0.6rem;
+
+  font-size: 0.85rem;
+  color: var(--tinta);
+
+  overflow-wrap: anywhere;
+}
+
+.inventario__error a {
+  color: var(--acento);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.inventario__error a:hover {
+  text-decoration: underline;
+}
+
+
+/*  RESPONSIVE */
+
+@media (max-width: 540px) {
+  .inventario__contenido {
+    padding-bottom: 2rem;
+  }
+
+  .inventario__error {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+}

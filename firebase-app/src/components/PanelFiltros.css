@@ -1,0 +1,160 @@
+/* Panel de controles: tarjeta blanca con los patrones de consulta */
+.inv-filtros {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+
+.inv-filtros__titulo {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--tinta);
+}
+
+.inv-filtros__patrones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.inv-filtros__chip {
+  padding: 0.5rem 0.95rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--tinta);
+  cursor: pointer;
+  background: var(--superficie-suave);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.inv-filtros__chip:hover {
+  border-color: var(--acento);
+}
+
+.inv-filtros__chip--activo,
+.inv-filtros__chip--activo:hover {
+  color: #ffffff;
+  background: var(--acento);
+  border-color: var(--acento);
+}
+
+.inv-filtros__chip:focus-visible,
+.inv-filtros__buscar:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* Fila de campos + botón Buscar */
+.inv-filtros__fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.inv-filtros__campo {
+  display: flex;
+  flex: 1 1 200px;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-width: 280px;
+}
+
+.inv-filtros__campo span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--tinta-suave);
+}
+
+.inv-filtros__campo select,
+.inv-filtros__campo input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--tinta);
+  background: #ffffff;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+}
+
+.inv-filtros__campo select:focus-visible,
+.inv-filtros__campo input:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 1px;
+  border-color: var(--acento);
+}
+
+.inv-filtros__buscar {
+  padding: 0.65rem 1.6rem;
+  font: inherit;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  background: var(--acento);
+  border: 1px solid var(--acento);
+  border-radius: 10px;
+  transition: background-color 0.15s;
+}
+
+.inv-filtros__buscar:hover:not(:disabled) {
+  background: var(--acento-oscuro);
+  border-color: var(--acento-oscuro);
+}
+
+.inv-filtros__buscar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inv-filtros__error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--no);
+}
+
+.inv-filtros__consulta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--tinta-suave);
+  overflow-wrap: anywhere;
+}
+
+.inv-filtros__consulta code {
+  padding: 0.1rem 0.4rem;
+  font-size: 0.78rem;
+  background: var(--superficie-suave);
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+}
+
+@media (max-width: 540px) {
+  .inv-filtros {
+    padding: 1rem;
+  }
+
+  .inv-filtros__campo {
+    max-width: none;
+    flex-basis: 100%;
+  }
+
+  .inv-filtros__buscar {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inv-filtros__chip,
+  .inv-filtros__buscar {
+    transition: none;
+  }
+}
